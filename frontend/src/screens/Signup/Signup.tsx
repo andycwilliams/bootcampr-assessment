@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './Signup.scss'
+import Logo from 'assets/Logo.svg'
 // Material UI Imports
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -8,7 +9,7 @@ import Container from '@mui/material/Container'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
-import Input from '@mui/material/Input'
+// import Input from '@mui/material/Input'
 import InputAdornment from '@mui/material/InputAdornment'
 import InputLabel from '@mui/material/InputLabel'
 import Visibility from '@mui/icons-material/Visibility'
@@ -25,15 +26,21 @@ export const Signup: React.FC = () => {
 
   return (
     <Container>
-      <Typography variant='h4' gutterBottom>
-        Join Bootcampr today.
-      </Typography>
-      <Typography variant='subtitle1' gutterBottom>
-        Get the experience. Get the job.
-      </Typography>
+      <Box sx={{ textAlign: 'center' }}>
+        <Typography variant='h4' gutterBottom>
+          Join Bootcampr today.
+        </Typography>
+        <Typography variant='subtitle1' gutterBottom>
+          Get the experience. Get the job.
+        </Typography>
+      </Box>
       <form>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            {/* Placeholder. To be updated with Figma image */}
+            <img src={Logo} alt='Logo' />
+          </Grid>
+          <Grid item xs={12} md={6}>
             <InputLabel htmlFor='first-name'>First name</InputLabel>
             <TextField
               id='first-name'
@@ -42,8 +49,7 @@ export const Signup: React.FC = () => {
               fullWidth
               required
             />
-          </Grid>
-          <Grid item xs={12}>
+
             <InputLabel htmlFor='last-name'>Last name</InputLabel>
             <TextField
               id='last-name'
@@ -52,8 +58,7 @@ export const Signup: React.FC = () => {
               fullWidth
               required
             />
-          </Grid>
-          <Grid item xs={12}>
+
             <InputLabel htmlFor='email'>
               Email address (ex. jeanine@bootcampr.io)
             </InputLabel>
@@ -65,8 +70,7 @@ export const Signup: React.FC = () => {
               fullWidth
               required
             />
-          </Grid>
-          <Grid item xs={12}>
+
             <InputLabel htmlFor='password'>
               Password (Min 8 characters, 1 upper, 1 lower, 1 symbol)
             </InputLabel>
@@ -74,7 +78,7 @@ export const Signup: React.FC = () => {
               id='password'
               variant='outlined'
               name='password'
-              type='password'
+              type={passwordVisibility ? 'password' : 'text'}
               fullWidth
               required
               InputProps={{
@@ -87,8 +91,7 @@ export const Signup: React.FC = () => {
                 ),
               }}
             />
-          </Grid>
-          <Grid item xs={12}>
+
             <InputLabel htmlFor='reenter-password'>
               Re-enter password
             </InputLabel>
@@ -96,7 +99,7 @@ export const Signup: React.FC = () => {
               id='reenter-password'
               variant='outlined'
               name='reenterPassword'
-              type='password'
+              type={passwordVisibility ? 'password' : 'text'}
               fullWidth
               required
               InputProps={{
@@ -109,16 +112,14 @@ export const Signup: React.FC = () => {
                 ),
               }}
             />
-          </Grid>
-          <Grid item xs={12}>
+
             <FormControlLabel
               control={<Checkbox />}
               label='I agree to receive email notification(s). We will only send 
 emails with important information, like project start dates. 
 We will not sell your information!'
             />
-          </Grid>
-          <Grid item xs={12}>
+
             <Button type='submit' variant='contained' color='primary' fullWidth>
               Sign up
             </Button>
