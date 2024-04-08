@@ -42,7 +42,7 @@ const SignupForm = () => {
     reenterPassword: '',
     emailNotification: false,
   })
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const handlePasswordVisibility = () => {
     setPasswordVisibility(prevState => !prevState)
@@ -75,7 +75,7 @@ const SignupForm = () => {
     try {
       const response = await axios.post('http://localhost:8001/users', formData)
       console.log('User created successfully:', response.data)
-      navigate('/success')
+      // navigate('/success')
     } catch (error) {
       console.error('Error submitting form:', error)
     }
