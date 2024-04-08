@@ -18,6 +18,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  emailNotification: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 
 const User = mongoose.model("User", userSchema);
