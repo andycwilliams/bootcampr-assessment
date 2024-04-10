@@ -34,6 +34,8 @@ const SignupHeader = () => {
 
 const SignupForm = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
+  const [doPasswordsMatch, setDoPasswordsMatch] = useState<boolean>(true)
+  const [isEmailInDatabase, setIsEmailInDatabase] = useState<boolean>(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -42,40 +44,53 @@ const SignupForm = () => {
     reenterPassword: '',
     emailNotification: false,
   })
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handlePasswordVisibility = () => {
     setPasswordVisibility(prevState => !prevState)
   }
 
   const handleIsEmailInDatabase = async () => {
-    console.log('onBlur effect triggered')
-    // TODO: Complete function
+    if (!formData.email) {
+      return
+    }
+
+    try {
+      const encodedEmail = encodeURIComponent(formData.email)
+      const response = await axios.get(
+        `http://localhost:8001/users/${encodedEmail}`
+      )
+      console.log('User with this email was found:', response.data)
+      setIsEmailInDatabase(true)
+    } catch (error) {
+      console.log('User not found')
+    }
   }
 
   const handleChange = e => {
     const { name, value } = e.target
-    // console.log(e.target)
     setFormData({ ...formData, [name]: value })
+    setIsEmailInDatabase(false)
+
+    if (name === 'reenterPassword') {
+      setDoPasswordsMatch(value === formData.password)
+    } else if (name === 'password') {
+      setDoPasswordsMatch(value === formData.reenterPassword)
+    }
   }
 
   const handleCheckboxChange = e => {
     const { name, checked } = e.target
-    console.log(e.target)
     setFormData({ ...formData, [name]: checked })
   }
 
   const handleSubmitForm = async e => {
     e.preventDefault()
-    if (formData.password !== formData.reenterPassword) {
-      // TODO: Complete function to ensure passwords match
-      console.log('Passwords do not match. Returning...')
-      return
-    }
+
     try {
       const response = await axios.post('http://localhost:8001/users', formData)
       console.log('User created successfully:', response.data)
-      // navigate('/success')
+      navigate('/success')
     } catch (error) {
       console.error('Error submitting form:', error)
     }
@@ -124,6 +139,8 @@ const SignupForm = () => {
             fullWidth
             required
             onBlur={handleIsEmailInDatabase}
+            error={isEmailInDatabase}
+            helperText={isEmailInDatabase ? 'Email already in database' : ''}
           />
           <InputLabel htmlFor='password'>
             Password (Min 8 characters, 1 upper, 1 lower, 1 symbol)
@@ -137,6 +154,8 @@ const SignupForm = () => {
             onChange={handleChange}
             fullWidth
             required
+            error={!doPasswordsMatch}
+            helperText={!doPasswordsMatch ? 'Passwords must match!' : ''}
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
@@ -157,6 +176,8 @@ const SignupForm = () => {
             onChange={handleChange}
             fullWidth
             required
+            error={!doPasswordsMatch}
+            helperText={!doPasswordsMatch ? 'Passwords must match!' : ''}
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
@@ -178,7 +199,13 @@ const SignupForm = () => {
 emails with important information, like project start dates. 
 We will not sell your information!'
           />
-          <Button type='submit' variant='contained' color='primary' fullWidth>
+          <Button
+            aria-label='Sign up'
+            type='submit'
+            variant='contained'
+            color='primary'
+            fullWidth
+          >
             Sign up
           </Button>
         </form>
