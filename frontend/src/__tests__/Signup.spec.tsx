@@ -26,7 +26,7 @@ describe('Signup Component', () => {
     })
   })
 
-  test('populates the signup form with data', () => {
+  test('submits a populated signup form', () => {
     const onSubmit = jest.fn()
 
     render(<Signup />)
@@ -57,9 +57,9 @@ describe('Signup Component', () => {
     fireEvent.click(submitButton)
 
     expect(onSubmit).toHaveBeenCalledWith({
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john@example.com',
+      firstName: 'Jeanine',
+      lastName: 'Smith',
+      email: 'jeanine@bootcampr.io',
       password: 'Password123!@#',
       reenterPassword: 'Password123!@#',
       emailNotification: true,
