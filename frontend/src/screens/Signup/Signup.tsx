@@ -36,6 +36,7 @@ const SignupHeader = () => {
 const SignupForm = () => {
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(true)
   const [doPasswordsMatch, setDoPasswordsMatch] = useState<boolean>(true)
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true)
   const [isEmailInDatabase, setIsEmailInDatabase] = useState<boolean>(false)
   const [formData, setFormData] = useState({
     firstName: '',
@@ -73,16 +74,27 @@ const SignupForm = () => {
     setFormData({ ...formData, [name]: value })
     setIsEmailInDatabase(false)
 
-    if (name === 'reenterPassword') {
-      setDoPasswordsMatch(value === formData.password)
-    } else if (name === 'password') {
-      setDoPasswordsMatch(value === formData.reenterPassword)
+    if (name === 'password') {
+      const passwordRegex =
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/
+      setDoPasswordsMatch(formData.reenterPassword === value)
+      setIsPasswordValid(passwordRegex.test(value))
+    } else if (name === 'reenterPassword') {
+      setDoPasswordsMatch(formData.password === value)
     }
   }
 
   const handleCheckboxChange = e => {
     const { name, checked } = e.target
     setFormData({ ...formData, [name]: checked })
+  }
+
+  const isFormValid = () => {
+    return (
+      Object.values(formData).every(i => i !== '') &&
+      isPasswordValid &&
+      doPasswordsMatch
+    )
   }
 
   const handleSubmitForm = async e => {
@@ -171,8 +183,24 @@ const SignupForm = () => {
             onChange={handleChange}
             fullWidth
             required
-            error={!doPasswordsMatch}
-            helperText={!doPasswordsMatch ? 'Passwords must match!' : ''}
+            error={!doPasswordsMatch || !isPasswordValid}
+            helperText={
+              !doPasswordsMatch ? (
+                'Passwords must match!'
+              ) : !isPasswordValid ? (
+                <>
+                  Password must have minimum 8 characters,
+                  <br />
+                  at least 1 uppercase letter,
+                  <br />
+                  at least 1 lowercase letter,
+                  <br />
+                  and at least 1 symbol!
+                </>
+              ) : (
+                ''
+              )
+            }
             InputProps={{
               endAdornment: (
                 <InputAdornment position='end'>
@@ -227,8 +255,10 @@ We will not sell your information!'
             type='submit'
             variant='contained'
             fullWidth
-            id='signupButton'
-            disabled={!doPasswordsMatch}
+            className={
+              isFormValid() ? 'signupButton valid' : 'signupButton invalid'
+            }
+            disabled={!isFormValid()}
           >
             Sign up
           </Button>
