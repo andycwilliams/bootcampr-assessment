@@ -1,3 +1,4 @@
+// React Imports
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Signup.scss'
@@ -21,11 +22,11 @@ import axios from 'axios'
 
 const SignupHeader = () => {
   return (
-    <Box sx={{ textAlign: 'center' }}>
+    <Box className='signupHeader'>
       <Typography variant='h4' gutterBottom>
         Join Bootcampr today.
       </Typography>
-      <Typography variant='subtitle1' gutterBottom>
+      <Typography variant='subtitle1' gutterBottom component='h5'>
         Get the experience. Get the job.
       </Typography>
     </Box>
@@ -97,13 +98,23 @@ const SignupForm = () => {
   }
 
   return (
-    <Grid container>
-      <Grid item xs={12} md={6}>
-        {/* TODO: Update with Figma image */}
-        <img src={Logo} alt='Logo' />
+    <Grid container direction='row'>
+      <Grid container item xs={12} md={6} direction='column' spacing={6}>
+        <Grid item className='imageContainer'>
+          <img src={Logo} alt='Logo' className='imageItem' />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={6}>
-        <form onSubmit={handleSubmitForm}>
+
+      <Grid
+        container
+        item
+        xs={12}
+        md={6}
+        component='form'
+        onSubmit={handleSubmitForm}
+        rowSpacing={2}
+      >
+        <Grid item xs={12}>
           <InputLabel htmlFor='first-name'>First name</InputLabel>
           <TextField
             id='first-name'
@@ -114,6 +125,8 @@ const SignupForm = () => {
             fullWidth
             required
           />
+        </Grid>
+        <Grid item xs={12}>
           <InputLabel htmlFor='last-name'>Last name</InputLabel>
           <TextField
             id='last-name'
@@ -126,6 +139,8 @@ const SignupForm = () => {
             fullWidth
             required
           />
+        </Grid>
+        <Grid item xs={12}>
           <InputLabel htmlFor='email'>
             Email address (ex. jeanine@bootcampr.io)
           </InputLabel>
@@ -142,6 +157,8 @@ const SignupForm = () => {
             error={isEmailInDatabase}
             helperText={isEmailInDatabase ? 'Email already in database' : ''}
           />
+        </Grid>
+        <Grid item xs={12}>
           <InputLabel htmlFor='password'>
             Password (Min 8 characters, 1 upper, 1 lower, 1 symbol)
           </InputLabel>
@@ -166,6 +183,8 @@ const SignupForm = () => {
               ),
             }}
           />
+        </Grid>
+        <Grid item xs={12}>
           <InputLabel htmlFor='reenter-password'>Re-enter password</InputLabel>
           <TextField
             id='reenter-password'
@@ -188,6 +207,8 @@ const SignupForm = () => {
               ),
             }}
           />
+        </Grid>
+        <Grid item xs={12}>
           <FormControlLabel
             control={
               <Checkbox
@@ -199,16 +220,19 @@ const SignupForm = () => {
 emails with important information, like project start dates. 
 We will not sell your information!'
           />
+        </Grid>
+        <Grid item xs={12}>
           <Button
             aria-label='Sign up'
             type='submit'
             variant='contained'
-            color='primary'
             fullWidth
+            id='signupButton'
+            disabled={!doPasswordsMatch}
           >
             Sign up
           </Button>
-        </form>
+        </Grid>
       </Grid>
     </Grid>
   )
@@ -216,7 +240,7 @@ We will not sell your information!'
 
 export const Signup: React.FC = () => {
   return (
-    <Container>
+    <Container sx={{ pb: 10 }}>
       <SignupHeader />
       <SignupForm />
     </Container>
